@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Leave;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Log;
+use App\Mail\NotificationMail;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -20,6 +22,7 @@ class AdminController extends Controller
 
         return view('admin.dashboard', compact('totalStudents', 'pendingLeaves', 'todayAttendances'));
     }
+
     // 1. Saari Leaves Dikhana
     public function viewLeaves() {
         Log::info("ADMIN LOG: Admin ne Leave Management page open kiya.");
@@ -49,6 +52,7 @@ class AdminController extends Controller
             return back()->with('error', "Something went wrong!");
         }
     }
+
     // 3. Manage Students & Grading System
     public function manageStudents() {
         Log::info("ADMIN LOG: Manage Students page open hua.");
@@ -60,6 +64,7 @@ class AdminController extends Controller
 
         return view('admin.students', compact('students'));
     }
+
     // 4. Tasks Manage Karna (Admin)
     public function manageTasks() {
         Log::info("ADMIN LOG: Task Management page open hua.");
@@ -88,12 +93,29 @@ class AdminController extends Controller
             ]);
 
             Log::info("ADMIN SUCCESS: Task assigned to student ID: " . $request->user_id);
-            return back()->with('success', 'Zabardast! Task successfully assign ho gaya hai.');
+
+            // Student ko email bhejna
+            $details = [
+                'subject' => 'Naya Task Assign ho gaya hai!',
+                'title' => 'Assigned Task: ' . $request->title,
+                'body' => 'Admin ne aapko ek naya task diya hai. Dashboard par ja kar check karein.'
+            ];
+
+            try {
+                $student = User::find($request->user_id);
+                Mail::to($student->email)->send(new NotificationMail($details));
+                Log::info("EMAIL SUCCESS: Task notification sent to " . $student->email);
+            } catch (\Exception $e) {
+                Log::error("EMAIL ERROR: " . $e->getMessage());
+            }
+
+            return back()->with('success', 'Zabardast! Task successfully assign ho gaya hai aur email bhi bhej di gayi hai.');
         } catch (\Exception $e) {
             Log::error("ADMIN ERROR (Task): " . $e->getMessage());
             return back()->with('error', 'Task assign nahi ho saka: ' . $e->getMessage());
         }
     }
+
     // 6. Task Approve ya Reject Karna (Admin)
     public function reviewTask(Request $request, $id) {
         $request->validate([
@@ -114,7 +136,8 @@ class AdminController extends Controller
             return back()->with('error', 'Task update nahi ho saka.');
         }
     }
-    // 1. Attendance Reports & Management View
+
+    // 7. Attendance Reports & Management View
     public function viewReports(Request $request) {
         Log::info("ADMIN LOG: Reports page accessed.");
 
@@ -135,7 +158,7 @@ class AdminController extends Controller
         return view('admin.reports', compact('students', 'records'));
     }
 
-    // 2. Manual Attendance Add/Update
+    // 8. Manual Attendance Add/Update
     public function storeManualAttendance(Request $request) {
         $request->validate([
             'user_id' => 'required',
@@ -158,7 +181,7 @@ class AdminController extends Controller
         }
     }
 
-    // 3. Attendance Delete
+    // 9. Attendance Delete
     public function deleteAttendance($id) {
         try {
             $record = Attendance::findOrFail($id);
