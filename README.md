@@ -1,59 +1,94 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 Attendance Management System (Enterprise Edition)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A robust, enterprise-grade Attendance and Task Management System built with Laravel. This application provides a seamless portal for students to mark attendance, submit leave requests, and manage assignments, while giving administrators full control over user management, grading, task reviews, and detailed reporting.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🌐 Live Demo & Credentials
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Public / User Portal:** [https://attendance.free.laravel.cloud/](https://attendance.free.laravel.cloud/)
+- **Admin Portal:** [https://attendance.free.laravel.cloud/dashboard/admin](https://attendance.free.laravel.cloud/dashboard/admin) *(or `/admin`)*
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Super Admin Credentials:**
+- **Email:** `officialbilal707@gmail.com`
+- **Password:** `admin123`
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🛠️ Tech Stack & UI Design
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Backend Framework:** Laravel 11.x (PHP)
+- **Database:** SQLite (Configured for Cloud Deployment)
+- **Frontend Styling:** Tailwind CSS (Compiled via Vite for a premium, custom enterprise UI)
+- **Icons:** FontAwesome 6.4.0 (via CDN)
+- **Rich Text Editor:** CKEditor (For rich-text task assignments)
+- **Role Management:** Spatie Laravel-Permission
+- **Hosting / Deployment:** Laravel Cloud
 
-## Laravel Sponsors
+> **UI Theme Note:** The entire application features a "Premium Corporate/Enterprise" theme with floating shadow cards, soft slate/indigo color palettes, interactive hover states, and smooth transitions built purely with Tailwind CSS utility classes.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## ✅ User Panel Features
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1. **Authentication**
+   - Premium Registration, Login, Forgot Password, and Verify Email pages.
+2. **Interactive Dashboard**
+   - **Mark Attendance:** One-click attendance tracking. Users are restricted to marking attendance only once per day (preventing duplicates or deletions).
+   - **Mark Leave:** Dedicated portal to submit leave requests.
+   - **View Attendance:** Real-time summary of daily records.
+3. **Profile Management**
+   - Users can securely upload and crop their profile pictures. Files are managed via Laravel's local `public` storage disk.
+4. **Leave Requests**
+   - Users can request leaves for specific dates with reasons and track their live status (Pending, Approved, Rejected).
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🛡️ Admin Panel Features
 
-## Code of Conduct
+1. **Secure Admin Authentication**
+   - Isolated login routes specifically for administrative access.
+2. **Student Management**
+   - Comprehensive DataGrid to view all registered users. Admin can manually Add, Edit, or Delete attendance records and view individual summaries.
+3. **Leave Approval Module**
+   - Centralized hub to view, review, and Approve/Reject leaves with custom feedback comments. Tracks total leave counts per student.
+4. **Advanced Attendance Reports**
+   - **Per Student:** Filter by specific user and date ranges for deep-dive reports.
+   - **System-Wide:** Generate overarching attendance summaries between selected dates.
+5. **Automated Grading System**
+   - Grades are calculated dynamically on the fly based on attendance counts:
+     - `Grade A`: 26+ Days Present
+     - `Grade B`: 20-25 Days Present
+     - `Grade C`: 15-19 Days Present
+     - `Grade D`: 10-14 Days Present
+     - `Grade F`: < 10 Days
+6. **Task Management Module**
+   - **Creation:** Admins assign tasks utilizing **CKEditor** for rich-text formatting.
+   - **Submission & Review:** Students complete tasks via their portal. Admins can review submissions, mark them as Approved/Rejected, and provide feedback.
+7. **Roles & Permissions (Spatie)**
+   - Dynamic Role Management UI. Admins can create custom roles (e.g., Teacher, HR) and assign granular permissions. Roles can be assigned to students directly from the Student Management table.
+8. **Automated Email Notifications**
+   - Fully integrated SMTP Mailers trigger automatic emails for critical events:
+     - Upon marking attendance.
+     - When a leave request is submitted.
+     - When tasks are assigned, approved, or rejected.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## ⚙️ Environment Configuration (.env)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+To run the Email Notification system, the following variables must be configured in your `.env` file using a valid SMTP provider (e.g., Gmail App Passwords):
 
-## License
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=********
+MAIL_PORT=******
+MAIL_USERNAME="************"
+MAIL_PASSWORD="*************"
+MAIL_ENCRYPTION=******
+MAIL_FROM_ADDRESS="************"
+MAIL_FROM_NAME="${APP_NAME}"
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Required for Profile Pictures to display correctly
+FILESYSTEM_DISK=public
+APP_URL=[https://attendance.free.laravel.cloud](https://attendance.free.laravel.cloud)
