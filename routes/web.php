@@ -5,6 +5,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\RoleController; // 👈 NAYA CONTROLLER ADD KIYA
 
 Route::get('/', function () {
     return redirect('/register');
@@ -37,6 +38,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports', [AdminController::class, 'viewReports'])->name('admin.reports');
         Route::post('/attendance/manual', [AdminController::class, 'storeManualAttendance'])->name('admin.attendance.manual');
         Route::delete('/attendance/{id}', [AdminController::class, 'deleteAttendance'])->name('admin.attendance.delete');
+        
+        // 👇 NAYE ROLES & PERMISSIONS WALE ROUTES 👇
+        Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles.index');
+        Route::get('/roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
+        Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
+        Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
+        Route::put('/roles/{id}', [RoleController::class, 'update'])->name('admin.roles.update');
+        Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
+        Route::post('/users/{id}/assign-role', [RoleController::class, 'assignRole'])->name('admin.users.assign_role');
     });
 });
 

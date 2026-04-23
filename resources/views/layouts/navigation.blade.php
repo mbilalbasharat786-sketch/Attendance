@@ -33,6 +33,10 @@
                         <x-nav-link :href="route('admin.reports')" :active="request()->routeIs('admin.reports')">
                             <i class="fa-solid fa-chart-pie mr-2 text-slate-400"></i> {{ __('Reports') }}
                         </x-nav-link>
+
+                        <x-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.*')">
+                            <i class="fa-solid fa-user-shield mr-2 text-slate-400"></i> {{ __('Roles') }}
+                        </x-nav-link>
                     @else
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             <i class="fa-solid fa-border-all mr-2 text-slate-400"></i> {{ __('My Dashboard') }}
@@ -46,7 +50,12 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-4 py-2 border border-slate-200 text-sm leading-4 font-medium rounded-full text-slate-600 bg-slate-50 hover:text-slate-800 hover:bg-slate-100 focus:outline-none transition ease-in-out duration-150">
-                            <i class="fa-solid fa-circle-user text-indigo-500 text-lg mr-2"></i>
+                            @if(Auth::user()->avatar)
+                                <img class="h-6 w-6 rounded-full object-cover mr-2 border border-slate-300" src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Profile photo" />
+                            @else
+                                <i class="fa-solid fa-circle-user text-indigo-500 text-lg mr-2"></i>
+                            @endif
+                            
                             <div class="font-semibold">{{ Auth::user()->name }}</div>
 
                             <div class="ms-2">
@@ -57,8 +66,8 @@
 
                     <x-slot name="content">
                         <div class="px-4 py-2 border-b border-slate-100">
-                            <span class="text-xs font-bold uppercase tracking-wider {{ auth()->user()->role === 'admin' ? 'text-indigo-600' : 'text-emerald-600' }}">
-                                {{ auth()->user()->role }}
+                            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">
+                                {{ auth()->user()->roles->pluck('name')->first() ?? auth()->user()->role ?? 'User' }}
                             </span>
                         </div>
 
@@ -105,16 +114,23 @@
                 <x-responsive-nav-link :href="route('admin.reports')" :active="request()->routeIs('admin.reports')">
                     <i class="fa-solid fa-chart-pie mr-2"></i> {{ __('Reports') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.*')">
+                    <i class="fa-solid fa-user-shield mr-2"></i> {{ __('Roles') }}
+                </x-responsive-nav-link>
             @else
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    <i class="fa-solid fa-border-all mr-2"></i> {{ __('My Dashboard') }}
+                
+                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">2"></i> {{ __('My Dashboard') }}
                 </x-responsive-nav-link>
             @endif
         </div>
 
         <div class="pt-4 pb-1 border-t border-slate-200 bg-slate-50">
             <div class="px-4 flex items-center mb-3">
-                <i class="fa-solid fa-circle-user text-indigo-500 text-3xl mr-3"></i>
+                @if(Auth::user()->avatar)
+                    <img class="h-10 w-10 rounded-full object-cover mr-3 border border-slate-300" src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Profile photo" />
+                @else
+                    <i class="fa-solid fa-circle-user text-indigo-500 text-3xl mr-3"></i>
+                @endif
                 <div>
                     <div class="font-medium text-base text-slate-800">{{ Auth::user()->name }}</div>
                     <div class="font-medium text-sm text-slate-500">{{ Auth::user()->email }}</div>
