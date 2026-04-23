@@ -1,62 +1,95 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-white leading-tight">
-                👨‍🎓 {{ __('Student Management & Grading') }}
+            <h2 class="font-semibold text-xl text-slate-800 leading-tight flex items-center">
+                <i class="fa-solid fa-user-graduate mr-3 text-indigo-600"></i>
+                {{ __('Student Management & Grading') }}
             </h2>
-            <a href="{{ route('admin.dashboard') }}" class="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded transition">
-                &larr; Back to Dashboard
+            <a href="{{ route('admin.dashboard') }}" class="text-sm bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-lg transition shadow-sm flex items-center">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Back to Dashboard
             </a>
         </div>
     </x-slot>
 
-    <style>
-        header { background-color: #111827 !important; color: white !important; }
-    </style>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl border border-gray-100">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-50 text-gray-600 text-sm uppercase tracking-wider border-b">
-                        <tr>
-                            <th class="p-4">Student Name</th>
-                            <th class="p-4">Email</th>
-                            <th class="p-4 text-center">Total Presents</th>
-                            <th class="p-4 text-center">Current Grade</th>
-                            <th class="p-4 text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse($students as $student)
-                            @php
-                                $presents = $student->attendances_count;
-                                if($presents >= 26) { $grade = 'A'; $color = 'bg-green-100 text-green-800'; }
-                                elseif($presents >= 20) { $grade = 'B'; $color = 'bg-blue-100 text-blue-800'; }
-                                elseif($presents >= 15) { $grade = 'C'; $color = 'bg-yellow-100 text-yellow-800'; }
-                                elseif($presents >= 10) { $grade = 'D'; $color = 'bg-orange-100 text-orange-800'; }
-                                else { $grade = 'F'; $color = 'bg-red-100 text-red-800'; }
-                            @endphp
-                            <tr class="hover:bg-gray-50 transition">
-                                <td class="p-4 font-bold text-gray-900">{{ $student->name }}</td>
-                                <td class="p-4 text-sm text-gray-600">{{ $student->email }}</td>
-                                <td class="p-4 text-center font-extrabold text-lg">{{ $presents }} Days</td>
-                                <td class="p-4 text-center">
-                                    <span class="{{ $color }} px-4 py-1 rounded-full text-sm font-extrabold shadow-sm">
-                                        Grade {{ $grade }}
-                                    </span>
-                                </td>
-                                <td class="p-4 text-center">
-                                    <button class="text-blue-500 hover:underline font-bold text-sm">View Report</button>
-                                </td>
-                            </tr>
-                        @empty
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-slate-200">
+                
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-800">Enrolled Students</h3>
+                    <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-indigo-200">
+                        {{ $students->count() }} Total
+                    </span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-white text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
                             <tr>
-                                <td colspan="5" class="p-8 text-center text-gray-500 text-lg">No students found in the system.</td>
+                                <th class="px-6 py-4 font-bold">Student Details</th>
+                                <th class="px-6 py-4 font-bold text-center">Total Presents</th>
+                                <th class="px-6 py-4 font-bold text-center">Current Grade</th>
+                                <th class="px-6 py-4 font-bold text-right">Action</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @forelse($students as $student)
+                                @php
+                                    $presents = $student->attendances_count;
+                                    if($presents >= 26) { $grade = 'A'; $color = 'bg-emerald-50 text-emerald-700 border-emerald-200'; }
+                                    elseif($presents >= 20) { $grade = 'B'; $color = 'bg-indigo-50 text-indigo-700 border-indigo-200'; }
+                                    elseif($presents >= 15) { $grade = 'C'; $color = 'bg-amber-50 text-amber-700 border-amber-200'; }
+                                    elseif($presents >= 10) { $grade = 'D'; $color = 'bg-orange-50 text-orange-700 border-orange-200'; }
+                                    else { $grade = 'F'; $color = 'bg-red-50 text-red-700 border-red-200'; }
+                                @endphp
+                                <tr class="hover:bg-slate-50 transition duration-150">
+                                    
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="h-10 w-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold mr-4 border border-indigo-200">
+                                                {{ strtoupper(substr($student->name, 0, 1)) }}
+                                            </div>
+                                            <div>
+                                                <div class="font-bold text-slate-800">{{ $student->name }}</div>
+                                                <div class="text-sm text-slate-500">{{ $student->email }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm font-semibold border border-slate-200">
+                                            <i class="fa-solid fa-calendar-check mr-2 text-slate-400"></i> {{ $presents }} Days
+                                        </span>
+                                    </td>
+                                    
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="{{ $color }} px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-wide">
+                                            Grade {{ $grade }}
+                                        </span>
+                                    </td>
+                                    
+                                    <td class="px-6 py-4 text-right">
+                                        <a href="{{ route('admin.reports', ['student_id' => $student->id]) }}" class="inline-flex items-center justify-center text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-lg transition font-medium text-sm border border-transparent hover:border-indigo-200">
+                                            <i class="fa-regular fa-eye mr-2"></i> View Report
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-6 py-16 text-center">
+                                        <div class="flex flex-col items-center justify-center text-slate-400">
+                                            <div class="h-16 w-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                                                <i class="fa-solid fa-users-slash text-2xl text-slate-400"></i>
+                                            </div>
+                                            <p class="text-lg font-bold text-slate-600">No students found</p>
+                                            <p class="text-sm text-slate-500 mt-1">When students register, they will appear in this list.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

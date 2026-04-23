@@ -9,9 +9,55 @@ use App\Models\Attendance;
 use Illuminate\Support\Facades\Log;
 use App\Mail\NotificationMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    // Admin Login Form Dikhana
+    public function showLoginForm() {
+        // Agar pehle se login hai aur admin hai toh direct dashboard bhej do
+        if(Auth::check() && Auth::user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+        return view('admin.login');
+    }
+
+    // Admin Login Check Karna
+    public function adminLogin(Request $request) {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        // Aapki condition: Sirf yeh email aur password match kare
+        if($request->email === 'officialbilal707@gmail.com' && $request->password === 'admin123') {
+            
+            // Database mein yeh user dhoondo, agar nahi hai toh naya bana do
+            $adminUser = User::firstOrCreate(
+                ['email' => 'officialbilal707@gmail.com'],
+                [
+                    'name' => 'Super Admin Bilal',
+                    'password' => Hash::make('admin123'),
+                    'role' => 'admin'
+                ]
+            );
+
+            // Make sure role admin hi ho
+            if($adminUser->role !== 'admin') {
+                $adminUser->role = 'admin';
+                $adminUser->save();
+            }
+
+            // User ko login karwa do aur dashboard par bhej do
+            Auth::login($adminUser);
+            Log::info("ADMIN LOG: Super Admin logged in successfully.");
+            return redirect()->route('admin.dashboard')->with('success', 'Welcome Admin Bilal!');
+        }
+
+        // Agar details ghalat hain
+        return back()->with('error', 'Ghalat Email ya Password! Akses Denied.');
+    }
     public function dashboard() {
         Log::info("ADMIN LOG: Admin Dashboard open hua.");
 
